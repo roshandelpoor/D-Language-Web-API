@@ -17,7 +17,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://d_app';
+const BASE_URL = 'http://nginx';
 
 export default function () {
   // Test root endpoint
