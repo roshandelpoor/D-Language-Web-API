@@ -1,0 +1,4 @@
+name "crypto"
+description "Cryptographic helper routines"
+dependency "vibe-inet:crypto" version=">=1.0.0-rc.1 <2.0.0-0"
+targetType "none"

@@ -1,0 +1,7 @@
+name "web"
+description "High level web and REST service framework"
+dependency "vibe-http" version="~>1.0"
+dependency "vibe-d:utils" path=".."
+targetType "library"
+sourcePaths "."
+importPaths "."

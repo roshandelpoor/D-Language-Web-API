@@ -1,0 +1,4 @@
+name "inet"
+description "Internet standard functionality"
+dependency "vibe-inet" version=">=1.0.0-rc.1 <2.0.0-0"
+targetType "none"

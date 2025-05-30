@@ -1,0 +1,6 @@
+{
+	"name": "websockets-autobahn-client",
+	"dependencies": {
+		"vibe-d": { "path": "../../" }
+	}
+}

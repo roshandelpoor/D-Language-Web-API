@@ -1,0 +1,4 @@
+name "data"
+description "Data format and serialization support"
+dependency "vibe-serialization" version=">=1.0.0-0 <2.0.0-0"
+targetType "none"

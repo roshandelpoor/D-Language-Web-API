@@ -1,0 +1,7 @@
+{
+    "name": "tests",
+    "description": "Redis pubsub tests",
+    "dependencies": {
+        "vibe-d:redis": {"path": "../../"}
+    }
+}
