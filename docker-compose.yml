@@ -52,8 +52,7 @@ services:
       - ./k6:/scripts
     networks:
       - app-network
-    tty: true
-    stdin_open: true
+    command: run /scripts/up.js
     depends_on:
       - nginx
 
