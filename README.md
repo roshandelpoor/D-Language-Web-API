@@ -77,29 +77,13 @@ docker-compose run k6 run /scripts/load-test.js
 docker-compose run k6 run /scripts/stress-test.js
 ```
 
-### Test Parameters
+## Test Parameters
 
 The stress test will:
 - Start with 20 virtual users
 - Gradually increase to 50 users
 - Then to 100 users
 - Finally ramp down to 0
-
-### Performance Metrics
-
-The test checks:
-- Response times (95% should be under 500ms)
-- Error rates (should be less than 1%)
-- Response content correctness
-
-### Test Results
-
-The test results will show:
-- Number of requests per second
-- Response time percentiles
-- Error rates
-- Virtual user counts
-- Additional performance metrics
 
 ## Architecture
 
