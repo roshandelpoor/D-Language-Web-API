@@ -47,11 +47,13 @@ services:
 
   k6:
     image: grafana/k6:latest
+    user: root
     volumes:
       - ./k6:/scripts
     networks:
       - app-network
-    #command: run /scripts/stress-test.js
+    tty: true
+    stdin_open: true
     depends_on:
       - nginx
 

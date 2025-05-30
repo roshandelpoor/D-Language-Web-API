@@ -72,7 +72,8 @@ The project includes k6 stress testing configuration. To run the tests:
 docker-compose up -d app nginx
 
 # Run stress tests
-docker-compose run k6 run /scripts/stress-test.js
+docker-compose exec k6 /bin/sh
+k6 run /scripts/stress-test.js
 ```
 
 ### Test Parameters
