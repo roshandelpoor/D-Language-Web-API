@@ -58,10 +58,13 @@ The API will be available at: http://localhost
 
 ## API Endpoints
 
+```bash
 - `GET /` - Returns status message
   - Response: `{"status": "running ..."}`
+
 - `GET /run` - Returns success message
   - Response: `{"message": "everything is working"}`
+```
 
 ## Performance Testing
 
@@ -92,7 +95,3 @@ The application uses:
 - Nginx for load balancing
 - Docker for containerization
 - k6 for performance testing
-
-## License
-
-[Add your license information here]
