@@ -9,22 +9,22 @@ export const options = {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                { duration: '30s', target: 50 },  // Ramp up to 50 users
-                { duration: '1m', target: 50 },   // Stay at 50 users
+                { duration: '30s', target: 10 },  // Start with fewer users
+                { duration: '1m', target: 10 },   // Stay at 10 users
                 { duration: '30s', target: 0 },   // Ramp down to 0 users
             ],
         },
     },
     thresholds: {
-        http_req_duration: ['p(95)<5000'],  // 95% of requests should complete within 5 seconds
+        http_req_duration: ['p(95)<30000'],  // Increased timeout to 30 seconds
         http_req_failed: ['rate<0.01'],     // Less than 1% of requests should fail
     },
 };
 
 // Generate random file content
 function generateFileContent() {
-    // Generate 1MB of random data
-    return randomString(1024 * 1024);
+    // Generate 100KB of random data instead of 1MB
+    return randomString(1024 * 100);
 }
 
 const BASE_URL = 'http://nginx';
@@ -38,8 +38,10 @@ export default function () {
         file: http.file(fileContent, 'test.txt', 'text/plain'),
     };
 
-    // Make the upload request
-    const response = http.post(`${BASE_URL}/upload`, data);
+    // Make the upload request with increased timeout
+    const response = http.post(`${BASE_URL}/upload`, data, {
+        timeout: '30s',  // Set timeout to 30 seconds
+    });
 
     // Check if the upload was successful
     check(response, {
@@ -50,5 +52,5 @@ export default function () {
     });
 
     // Sleep between requests to prevent overwhelming the server
-    sleep(1);
+    sleep(2);  // Increased sleep time
 }

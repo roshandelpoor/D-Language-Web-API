@@ -17,7 +17,7 @@ services:
     networks:
       - app-network
     deploy:
-      replicas: 10  # Run 10 instances of the app
+      replicas: 5  # Run 5 instances of the app
       resources:
         limits:
           cpus: '1'
