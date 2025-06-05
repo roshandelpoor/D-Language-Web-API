@@ -3,7 +3,8 @@
     "description": "A simple D web API",
     "authors": ["roshandelpoor"],
     "dependencies": {
-        "vibe-d": "~>0.9.4"
+        "vibe-d": "~>0.8.4",
+        "vibe-core": "~>1.11.0"
     },
     "versions": ["VibeDefaultMain"],
     "subPackages": [],
@@ -11,5 +12,9 @@
         "debug": {
             "buildOptions": ["debugMode", "debugInfo"]
         }
-    }
-} 
+    },
+    "dflags": [
+        "-preview=dip1000"
+    ],
+    "compiler": "dmd"
+}

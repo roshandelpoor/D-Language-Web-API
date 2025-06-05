@@ -17,7 +17,7 @@ services:
     networks:
       - app-network
     deploy:
-      replicas: 5  # Run 5 instances of the app
+      replicas: 1  # Run 5 instances of the app
       resources:
         limits:
           cpus: '1'
@@ -39,11 +39,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 1G
+          cpus: '2'
+          memory: 2G
         reservations:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
 
   k6:
     image: grafana/k6:latest

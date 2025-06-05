@@ -9,6 +9,7 @@ import std.random;
 import core.thread;
 import std.file;
 import std.path;
+import vibe.inet.webform;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
 {
@@ -20,48 +21,48 @@ void handleRun(HTTPServerRequest req, HTTPServerResponse res)
     res.writeJsonBody(["message": "everything is working"]);
 }
 
-// void handleTime(HTTPServerRequest req, HTTPServerResponse res)
-// {
-//     auto sleepTime = uniform(5, 10);
-//     Thread.sleep(dur!"seconds"(sleepTime));
+void handleTime(HTTPServerRequest req, HTTPServerResponse res)
+{
+    auto sleepTime = uniform(5, 10);
+    Thread.sleep(dur!"seconds"(sleepTime));
     
-//     auto currentTime = Clock.currTime();
+    auto currentTime = Clock.currTime();
     
-//     res.writeJsonBody([
-//         "time": currentTime.toISOExtString(),
-//         "sleep_duration": sleepTime
-//     ]);
-// }
+    res.writeJsonBody([
+        "time": currentTime.toISOExtString(),
+        "sleep_duration": sleepTime
+    ]);
+}
 
-// void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
-// {
-//     try {
-//         if (!exists("uploads")) {
-//             mkdir("uploads");
-//         }
+void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        if (!exists("uploads")) {
+            mkdir("uploads");
+        }
 
-//         auto file = req.files["file"];
-//         if (file is null) {
-//             res.statusCode = HTTPStatus.badRequest;
-//             res.writeJsonBody(["error": "No file uploaded"]);
-//             return;
-//         }
+        auto file = req.files["file"];
+        if (file is null) {
+            res.statusCode = HTTPStatus.badRequest;
+            res.writeJsonBody(["error": "No file uploaded"]);
+            return;
+        }
 
-//         auto timestamp = Clock.currTime().toISOExtString();
-//         auto filename = "uploads/" ~ timestamp ~ "_" ~ file.filename;
+        auto timestamp = Clock.currTime().toISOExtString();
+        auto filename = "uploads/" ~ timestamp ~ "_" ~ file.filename;
         
-//         file.saveAs(filename);
+        file.saveAs(filename);
         
-//         res.writeJsonBody([
-//             "status": "success",
-//             "filename": filename,
-//             "size": file.size,
-//             "content_type": file.contentType
-//         ]);
-//     } catch (Exception e) {
-//         res.statusCode = HTTPStatus.internalServerError;
-//         res.writeJsonBody(["error": e.msg]);
-//     }
-// } 
+        res.writeJsonBody([
+            "status": "success",
+            "filename": filename,
+            "size": file.size,
+            "content_type": file.contentType
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody(["error": e.msg]);
+    }
+} 
 
  
