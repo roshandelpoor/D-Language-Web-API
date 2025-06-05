@@ -10,6 +10,7 @@ import core.thread;
 import std.file;
 import std.path;
 import vibe.inet.webform;
+import std.stdio;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
 {
@@ -29,8 +30,7 @@ void handleTime(HTTPServerRequest req, HTTPServerResponse res)
     auto currentTime = Clock.currTime();
     
     res.writeJsonBody([
-        "time": currentTime.toISOExtString(),
-        "sleep_duration": sleepTime
+        "time": currentTime.toISOExtString()
     ]);
 }
 
@@ -41,23 +41,39 @@ void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
             mkdir("uploads");
         }
 
-        auto file = req.files["file"];
-        if (file is null) {
+        auto pf = "file" in req.files;
+        if (pf is null) {
             res.statusCode = HTTPStatus.badRequest;
             res.writeJsonBody(["error": "No file uploaded"]);
             return;
         }
-
+        
         auto timestamp = Clock.currTime().toISOExtString();
-        auto filename = "uploads/" ~ timestamp ~ "_" ~ file.filename;
+        auto destPath = NativePath("uploads") ~ (timestamp ~ "_" ~ pf.filename.to!string);
         
-        file.saveAs(filename);
-        
+        try moveFile(pf.tempPath, destPath);
+        catch (Exception e) {
+            logWarn("Failed to move file to destination folder: %s", e.msg);
+            logInfo("Performing copy+delete instead.");
+            copyFile(pf.tempPath, destPath);
+        }
+
+        import std.file : getSize;
+        auto fileSize = getSize(destPath.toString());
+
+        string contentType = "";
+        static if (__traits(hasMember, typeof(*pf), "contentType"))
+            contentType = (*pf).contentType;
+        else static if (__traits(hasMember, typeof(*pf), "type"))
+            contentType = (*pf).type;
+        else static if (__traits(hasMember, typeof(*pf), "mimeType"))
+            contentType = (*pf).mimeType;
+
         res.writeJsonBody([
             "status": "success",
-            "filename": filename,
-            "size": file.size,
-            "content_type": file.contentType
+            "filename": destPath.toString(),
+            "size": to!string(fileSize),
+            "content_type": contentType
         ]);
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
