@@ -8,10 +8,13 @@
         }
     },
     "versions": ["VibeDefaultMain"],
-    "subPackages": [],
+    "targetType": "executable",
     "buildTypes": {
         "debug": {
             "buildOptions": ["debugMode", "debugInfo"]
+        },
+        "release": {
+            "buildOptions": ["releaseMode", "optimize", "inline"]
         }
     }
 }

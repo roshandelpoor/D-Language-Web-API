@@ -17,12 +17,17 @@ RUN apt-get update && \
 
 RUN curl -fsS https://dlang.org/install.sh | bash -s dmd
 
+ENV DFLAGS="-O -release -boundscheck=off -linker=gold"
+ENV DMD_OPTIMIZE="-O -release"
+
 RUN echo '#!/bin/bash\n\
 source ~/dlang/dmd-2.111.0/activate\n\
 exec "$@"' > /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
+
 COPY libs/ /app/libs/
+
 CMD ["dub", "clean"] 
-CMD ["dub", "run"] 
+CMD ["dub", "run", "--build=release"] 

@@ -12,19 +12,19 @@ services:
       - ./dub.json:/app/dub.json
     environment:
       - DUB_HTTP_PROXY=
-    command: dub run
+    command: dub run --build=release
     restart: unless-stopped
     networks:
       - app-network
     deploy:
-      replicas: 5  # Run 5 instances of the app
+      replicas: 10  # Run 10 instances of the app
       resources:
         limits:
           cpus: '1'
-          memory: 1G
+          memory: 2G
         reservations:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
 
   nginx:
     image: nginx:latest
