@@ -17,7 +17,7 @@ RUN apt-get update && \
 
 RUN curl -fsS https://dlang.org/install.sh | bash -s dmd
 
-ENV DFLAGS="-O -release -boundscheck=off -linker=gold"
+ENV DFLAGS="-O -release -boundscheck=off"
 ENV DMD_OPTIMIZE="-O -release"
 
 RUN echo '#!/bin/bash\n\
