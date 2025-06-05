@@ -52,12 +52,10 @@ void handleTime(HTTPServerRequest req, HTTPServerResponse res)
 void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
 {
     try {
-        // Create uploads directory if it doesn't exist
         if (!exists("uploads")) {
             mkdir("uploads");
         }
 
-        // Get the uploaded file
         auto file = req.files["file"];
         if (file is null) {
             res.statusCode = HTTPStatus.badRequest;
@@ -65,11 +63,9 @@ void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
             return;
         }
 
-        // Generate unique filename
         auto timestamp = Clock.currTime().toISOExtString();
         auto filename = "uploads/" ~ timestamp ~ "_" ~ file.filename;
         
-        // Save the file
         file.saveAs(filename);
         
         res.writeJsonBody([

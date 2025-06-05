@@ -52,7 +52,7 @@ services:
       - ./k6:/scripts
     networks:
       - app-network
-    command: run /scripts/up.js
+    command: run /scripts/app-up.js
     depends_on:
       - nginx
 
