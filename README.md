@@ -51,7 +51,9 @@ The API will be available at: http://localhost:8081
 To run the application with Docker:
 
 ```bash
-docker-compose up -d
+docker-compose down
+docker-compose build --no-cache
+docker-compose up
 ```
 
 The API will be available at: http://localhost
