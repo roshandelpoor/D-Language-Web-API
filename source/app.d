@@ -16,7 +16,7 @@ shared static this()
     router.get("/", &handleRoot);
     router.get("/run", &handleRun);
     router.get("/time", &handleTime);
-    // router.post("/upload", &handleFileUpload);
+    router.post("/upload", &handleFileUpload);
     
     listenHTTP(settings, router);
     logInfo("Server is running on http://0.0.0.0:8081");

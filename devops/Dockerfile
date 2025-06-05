@@ -23,4 +23,6 @@ exec "$@"' > /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
+COPY libs/ /app/libs/
+CMD ["dub", "clean"] 
 CMD ["dub", "run"] 
