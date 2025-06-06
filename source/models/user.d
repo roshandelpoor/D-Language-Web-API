@@ -7,6 +7,14 @@ struct User {
     string email;
     int age;
     string country;
+    
+    // Add validation
+    bool isValid() {
+        return username.length > 0 &&
+               email.length > 0 &&
+               age >= 18 &&
+               country.length > 0;
+    }
 }
 
 // Function to generate random user data

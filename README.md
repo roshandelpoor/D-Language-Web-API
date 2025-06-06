@@ -71,6 +71,17 @@ The API will be available at: http://localhost
 ```
 ```bash
 curl -X POST http://localhost:8081/users/random
+curl http://localhost:8081/users/1
+curl "http://localhost:8081/users?limit=10&offset=0"
+curl -X PUT http://localhost:8081/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "newusername",
+    "email": "newemail@example.com",
+    "age": 25,
+    "country": "Canada"
+  }'
+curl -X DELETE http://localhost:8081/users/1
 ```
 
 ## Performance Testing

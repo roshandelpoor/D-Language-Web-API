@@ -13,6 +13,9 @@ import vibe.inet.webform;
 import std.stdio;
 import user;
 import database;
+import models.user;
+import db.database;
+import std.conv;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
 {
@@ -101,6 +104,150 @@ void handleCreateRandomUser(HTTPServerRequest req, HTTPServerResponse res)
                 "age": randomUser.age,
                 "country": randomUser.country
             ]
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody([
+            "status": "error",
+            "message": e.msg
+        ]);
+    }
+}
+
+void handleGetUser(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        int userId = to!int(req.params["id"]);
+        auto db = new Database();
+        
+        auto user = db.getUser(userId);
+        if (user is null) {
+            res.statusCode = HTTPStatus.notFound;
+            res.writeJsonBody([
+                "status": "error",
+                "message": "User not found"
+            ]);
+            return;
+        }
+        
+        res.writeJsonBody([
+            "status": "success",
+            "user": [
+                "username": user.username,
+                "email": user.email,
+                "age": user.age,
+                "country": user.country
+            ]
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody([
+            "status": "error",
+            "message": e.msg
+        ]);
+    }
+}
+
+void handleListUsers(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        int limit = to!int(req.params.get("limit", "10"));
+        int offset = to!int(req.params.get("offset", "0"));
+        
+        auto db = new Database();
+        auto users = db.listUsers(limit, offset);
+        auto total = db.countUsers();
+        
+        res.writeJsonBody([
+            "status": "success",
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "users": users.map!(u => [
+                "username": u.username,
+                "email": u.email,
+                "age": u.age,
+                "country": u.country
+            ]).array
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody([
+            "status": "error",
+            "message": e.msg
+        ]);
+    }
+}
+
+void handleUpdateUser(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        int userId = to!int(req.params["id"]);
+        auto data = req.jsonBody.to!(string[string]);
+        
+        auto user = User(
+            data["username"],
+            data["email"],
+            to!int(data["age"]),
+            data["country"]
+        );
+        
+        if (!user.isValid()) {
+            res.statusCode = HTTPStatus.badRequest;
+            res.writeJsonBody([
+                "status": "error",
+                "message": "Invalid user data"
+            ]);
+            return;
+        }
+        
+        auto db = new Database();
+        if (!db.updateUser(userId, user)) {
+            res.statusCode = HTTPStatus.notFound;
+            res.writeJsonBody([
+                "status": "error",
+                "message": "User not found"
+            ]);
+            return;
+        }
+        
+        res.writeJsonBody([
+            "status": "success",
+            "message": "User updated successfully",
+            "user": [
+                "username": user.username,
+                "email": user.email,
+                "age": user.age,
+                "country": user.country
+            ]
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody([
+            "status": "error",
+            "message": e.msg
+        ]);
+    }
+}
+
+void handleDeleteUser(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        int userId = to!int(req.params["id"]);
+        auto db = new Database();
+        
+        if (!db.deleteUser(userId)) {
+            res.statusCode = HTTPStatus.notFound;
+            res.writeJsonBody([
+                "status": "error",
+                "message": "User not found"
+            ]);
+            return;
+        }
+        
+        res.writeJsonBody([
+            "status": "success",
+            "message": "User deleted successfully"
         ]);
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;

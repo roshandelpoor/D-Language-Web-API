@@ -19,7 +19,13 @@ shared static this()
     router.get("/run", &handleRun);
     router.get("/time", &handleTime);
     router.post("/upload", &handleFileUpload);
+    
+    // User CRUD routes
     router.post("/users/random", &handleCreateRandomUser);
+    router.get("/users/:id", &handleGetUser);
+    router.get("/users", &handleListUsers);
+    router.put("/users/:id", &handleUpdateUser);
+    router.delete("/users/:id", &handleDeleteUser);
     
     listenHTTP(settings, router);
     logInfo("Server is running on http://0.0.0.0:8081");
