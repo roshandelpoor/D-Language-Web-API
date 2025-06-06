@@ -8,7 +8,6 @@ services:
     expose:
       - "${APP_PORT-8081}"
     volumes:
-      - ./source:/app/source
       - ./dub.json:/app/dub.json
     environment:
       - DUB_HTTP_PROXY=${DUB_HTTP_PROXY}
