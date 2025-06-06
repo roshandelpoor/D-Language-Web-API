@@ -41,6 +41,8 @@ source ~/dlang/dmd-2.111.0/activate
 To run the application locally:
 
 ```bash
+dub clean
+dub upgrade
 dub run
 ```
 

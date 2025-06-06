@@ -8,6 +8,7 @@ services:
     expose:
       - "${APP_PORT-8081}"
     volumes:
+      - ./source:/app/source
       - ./dub.json:/app/dub.json
     environment:
       - DUB_HTTP_PROXY=${DUB_HTTP_PROXY}
@@ -49,7 +50,6 @@ services:
   
   database:
     image: postgres:15.2-alpine
-    restart: "no"
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -58,7 +58,7 @@ services:
       - 5432:5432
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./devops/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./devops/volumes/database:/var/lib/postgresql/data
     depends_on:
       - app

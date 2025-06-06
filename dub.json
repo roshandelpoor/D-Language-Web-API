@@ -9,6 +9,8 @@
     },
     "versions": ["VibeDefaultMain"],
     "targetType": "executable",
+    "targetName": "hello-world-api",
+    "mainSourceFile": "source/app.d",
     "buildTypes": {
         "debug": {
             "buildOptions": ["debugMode", "debugInfo"]
