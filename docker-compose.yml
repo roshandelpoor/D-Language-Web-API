@@ -11,7 +11,7 @@ services:
       - ./source:/app/source
       - ./dub.json:/app/dub.json
     environment:
-      - DUB_HTTP_PROXY=
+      - DUB_HTTP_PROXY=${DUB_HTTP_PROXY}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}
