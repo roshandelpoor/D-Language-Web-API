@@ -11,7 +11,7 @@ import std.file;
 import std.path;
 import vibe.inet.webform;
 import std.stdio;
-import models.user;
+import user;
 import database;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
