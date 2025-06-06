@@ -6,7 +6,7 @@ import vibe.core.core;
 import vibe.core.log;
 import handlers;
 import models.user;
-import db.database;
+import database;
 
 shared static this()
 {

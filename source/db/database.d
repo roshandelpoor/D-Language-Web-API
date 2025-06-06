@@ -10,6 +10,7 @@ class Database {
             .format(environment.get("DB_USERNAME"),
                    environment.get("DB_PASSWORD"),
                    environment.get("DB_DATABASE"));
+                   
         conn = new PostgreSQLConnection(connString);
     }
     
