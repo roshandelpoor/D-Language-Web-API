@@ -5,6 +5,8 @@ import vibe.http.common;
 import vibe.core.core;
 import vibe.core.log;
 import handlers;
+import models.user;
+import db.database;
 
 shared static this()
 {
@@ -17,6 +19,7 @@ shared static this()
     router.get("/run", &handleRun);
     router.get("/time", &handleTime);
     router.post("/upload", &handleFileUpload);
+    router.post("/users/random", &handleCreateRandomUser);
     
     listenHTTP(settings, router);
     logInfo("Server is running on http://0.0.0.0:8081");

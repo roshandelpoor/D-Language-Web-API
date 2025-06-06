@@ -11,6 +11,8 @@ import std.file;
 import std.path;
 import vibe.inet.webform;
 import std.stdio;
+import models.user;
+import db.database;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
 {
@@ -78,6 +80,34 @@ void handleFileUpload(HTTPServerRequest req, HTTPServerResponse res)
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
         res.writeJsonBody(["error": e.msg]);
+    }
+}
+
+void handleCreateRandomUser(HTTPServerRequest req, HTTPServerResponse res)
+{
+    try {
+        auto db = new Database();
+        auto randomUser = generateRandomUser();
+        
+        int userId = db.insertUser(randomUser);
+        
+        res.writeJsonBody([
+            "status": "success",
+            "message": "Random user created successfully",
+            "user": [
+                "id": userId,
+                "username": randomUser.username,
+                "email": randomUser.email,
+                "age": randomUser.age,
+                "country": randomUser.country
+            ]
+        ]);
+    } catch (Exception e) {
+        res.statusCode = HTTPStatus.internalServerError;
+        res.writeJsonBody([
+            "status": "error",
+            "message": e.msg
+        ]);
     }
 } 
 

@@ -8,11 +8,12 @@ CREATE SCHEMA dlang_data;
 GRANT ALL PRIVILEGES ON SCHEMA dlang_data TO dlang_user;
 
 -- Create Tables
-CREATE TABLE dlang_data.users (
+CREATE TABLE IF NOT EXISTS dlang_data.users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    age INTEGER NOT NULL,
+    country VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

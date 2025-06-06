@@ -69,6 +69,9 @@ The API will be available at: http://localhost
 - `GET /run` - Returns success message
   - Response: `{"message": "everything is working"}`
 ```
+```bash
+curl -X POST http://localhost:8081/users/random
+```
 
 ## Performance Testing
 
