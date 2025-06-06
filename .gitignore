@@ -18,3 +18,5 @@
 # Build directories
 build/
 .dub/ 
+devops/volumes/
+hello-world-api
