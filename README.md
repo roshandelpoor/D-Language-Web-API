@@ -113,3 +113,16 @@ The application uses:
 - Nginx for load balancing
 - Docker for containerization
 - k6 for performance testing
+
+
+## Current API Endpoints
+
+- GET / - Root endpoint
+- GET /run - Test endpoint
+- GET /time - Time endpoint with random delay
+- POST /upload - File upload endpoint
+- POST /users/random - Create random user
+- GET /users/:id - Get user by ID
+- GET /users - List users with pagination
+- PUT /users/:id - Update user
+- DELETE /users/:id - Delete user

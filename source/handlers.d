@@ -13,9 +13,10 @@ import vibe.inet.webform;
 import std.stdio;
 import user;
 import database;
-import models.user;
-import db.database;
 import std.conv;
+import std.algorithm;
+import std.array;
+import vibe.data.json;
 
 void handleRoot(HTTPServerRequest req, HTTPServerResponse res)
 {
@@ -94,23 +95,25 @@ void handleCreateRandomUser(HTTPServerRequest req, HTTPServerResponse res)
         
         int userId = db.insertUser(randomUser);
         
-        res.writeJsonBody([
-            "status": "success",
-            "message": "Random user created successfully",
-            "user": [
-                "id": userId,
-                "username": randomUser.username,
-                "email": randomUser.email,
-                "age": randomUser.age,
-                "country": randomUser.country
-            ]
+        auto userJson = Json([
+            "id": Json(userId),
+            "username": Json(randomUser.username),
+            "email": Json(randomUser.email),
+            "age": Json(randomUser.age),
+            "country": Json(randomUser.country)
         ]);
+        
+        res.writeJsonBody(Json([
+            "status": Json("success"),
+            "message": Json("Random user created successfully"),
+            "user": userJson
+        ]));
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
-        res.writeJsonBody([
-            "status": "error",
-            "message": e.msg
-        ]);
+        res.writeJsonBody(Json([
+            "status": Json("error"),
+            "message": Json(e.msg)
+        ]));
     }
 }
 
@@ -121,30 +124,31 @@ void handleGetUser(HTTPServerRequest req, HTTPServerResponse res)
         auto db = new Database();
         
         auto user = db.getUser(userId);
-        if (user is null) {
-            res.statusCode = HTTPStatus.notFound;
-            res.writeJsonBody([
-                "status": "error",
-                "message": "User not found"
+        if (!user.isNull) {
+            auto userJson = Json([
+                "username": Json(user.get.username),
+                "email": Json(user.get.email),
+                "age": Json(user.get.age),
+                "country": Json(user.get.country)
             ]);
-            return;
+            
+            res.writeJsonBody(Json([
+                "status": Json("success"),
+                "user": userJson
+            ]));
+        } else {
+            res.statusCode = HTTPStatus.notFound;
+            res.writeJsonBody(Json([
+                "status": Json("error"),
+                "message": Json("User not found")
+            ]));
         }
-        
-        res.writeJsonBody([
-            "status": "success",
-            "user": [
-                "username": user.username,
-                "email": user.email,
-                "age": user.age,
-                "country": user.country
-            ]
-        ]);
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
-        res.writeJsonBody([
-            "status": "error",
-            "message": e.msg
-        ]);
+        res.writeJsonBody(Json([
+            "status": Json("error"),
+            "message": Json(e.msg)
+        ]));
     }
 }
 
@@ -158,24 +162,28 @@ void handleListUsers(HTTPServerRequest req, HTTPServerResponse res)
         auto users = db.listUsers(limit, offset);
         auto total = db.countUsers();
         
-        res.writeJsonBody([
-            "status": "success",
-            "total": total,
-            "limit": limit,
-            "offset": offset,
-            "users": users.map!(u => [
-                "username": u.username,
-                "email": u.email,
-                "age": u.age,
-                "country": u.country
-            ]).array
-        ]);
+        auto userArray = users.map!(u => Json([
+            "username": Json(u.username),
+            "email": Json(u.email),
+            "age": Json(u.age),
+            "country": Json(u.country)
+        ])).array;
+        
+        auto userList = Json(userArray);
+        
+        res.writeJsonBody(Json([
+            "status": Json("success"),
+            "total": Json(total),
+            "limit": Json(limit),
+            "offset": Json(offset),
+            "users": userList
+        ]));
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
-        res.writeJsonBody([
-            "status": "error",
-            "message": e.msg
-        ]);
+        res.writeJsonBody(Json([
+            "status": Json("error"),
+            "message": Json(e.msg)
+        ]));
     }
 }
 
@@ -183,7 +191,10 @@ void handleUpdateUser(HTTPServerRequest req, HTTPServerResponse res)
 {
     try {
         int userId = to!int(req.params["id"]);
-        auto data = req.jsonBody.to!(string[string]);
+        
+        // Read JSON body from request
+        auto jsonString = req.bodyReader.readAllUTF8();
+        auto data = jsonString.deserializeJson!(string[string]);
         
         auto user = User(
             data["username"],
@@ -194,39 +205,41 @@ void handleUpdateUser(HTTPServerRequest req, HTTPServerResponse res)
         
         if (!user.isValid()) {
             res.statusCode = HTTPStatus.badRequest;
-            res.writeJsonBody([
-                "status": "error",
-                "message": "Invalid user data"
-            ]);
+            res.writeJsonBody(Json([
+                "status": Json("error"),
+                "message": Json("Invalid user data")
+            ]));
             return;
         }
         
         auto db = new Database();
         if (!db.updateUser(userId, user)) {
             res.statusCode = HTTPStatus.notFound;
-            res.writeJsonBody([
-                "status": "error",
-                "message": "User not found"
-            ]);
+            res.writeJsonBody(Json([
+                "status": Json("error"),
+                "message": Json("User not found")
+            ]));
             return;
         }
         
-        res.writeJsonBody([
-            "status": "success",
-            "message": "User updated successfully",
-            "user": [
-                "username": user.username,
-                "email": user.email,
-                "age": user.age,
-                "country": user.country
-            ]
+        auto userJson = Json([
+            "username": Json(user.username),
+            "email": Json(user.email),
+            "age": Json(user.age),
+            "country": Json(user.country)
         ]);
+        
+        res.writeJsonBody(Json([
+            "status": Json("success"),
+            "message": Json("User updated successfully"),
+            "user": userJson
+        ]));
     } catch (Exception e) {
         res.statusCode = HTTPStatus.internalServerError;
-        res.writeJsonBody([
-            "status": "error",
-            "message": e.msg
-        ]);
+        res.writeJsonBody(Json([
+            "status": Json("error"),
+            "message": Json(e.msg)
+        ]));
     }
 }
 

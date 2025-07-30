@@ -25,7 +25,7 @@ shared static this()
     router.get("/users/:id", &handleGetUser);
     router.get("/users", &handleListUsers);
     router.put("/users/:id", &handleUpdateUser);
-    router.delete("/users/:id", &handleDeleteUser);
+    router.delete_("/users/:id", &handleDeleteUser);
     
     listenHTTP(settings, router);
     logInfo("Server is running on http://0.0.0.0:8081");
