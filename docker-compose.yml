@@ -20,7 +20,7 @@ services:
     networks:
       - app-network
     deploy:
-      replicas: 1
+      replicas: 5
       resources:
         limits:
           cpus: '1'
